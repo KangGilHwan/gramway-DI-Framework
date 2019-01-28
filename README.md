@@ -1,13 +1,23 @@
-# 웹 애플리케이션 서버
-## 진행 방법
-* 웹 애플리케이션 서버 요구사항을 파악한다.
-* 요구사항에 대한 구현을 완료한 후 자신의 github 아이디에 해당하는 브랜치에 Pull Request(이하 PR)를 통해 코드 리뷰 요청을 한다.
-* 코드 리뷰 피드백에 대한 개선 작업을 하고 다시 PUSH한다.
-* 모든 피드백을 완료하면 다음 단계를 도전하고 앞의 과정을 반복한다.
+## gramway-DI-Framework
 
-## 온라인 코드 리뷰 과정
-* [텍스트와 이미지로 살펴보는 코드스쿼드의 온라인 코드 리뷰 과정](https://github.com/code-squad/codesquad-docs/blob/master/codereview/README.md)
-* [동영상으로 살펴보는 코드스쿼드의 온라인 코드 리뷰 과정](https://youtu.be/a5c9ku-_fok)
+### 어노테이션 기반 MVC DI 프레임워크
+<https://github.com/KangGilHwan/java-was/tree/KangGilHwan> 를 해당 repository로 이전
 
-* Socket의 사용법에 대해서 대략적으로 알게 되었습니다.
-*
+v1
+
+* @controller 어노테이션을 붙이면 객체가 컨트롤러로 인식이 되도록 하였습니다. 컨트롤러 인식이 된 객체의 경우, @RequestMapping을 키값으로 하여 Map에 담기고, 요청받은 url과 비교하여 분기 처리 됩니다.  
+
+* 컨트롤러 내의 메서드의 파라미터에 @RequestParam 어노테이션이 붙은 경우, 스프링의 기능과 비슷하게 동작하도록 구현하였습니다. ex) `public String (@RqeustParam String id){}` 내부적으로 `id = request.getParameter("id")` 와 같이 동작합니다.
+
+* 컨트롤러 내의 메서드의 파라미터가 자바빈 규약에 따르는 클래스인 경우, 자동으로 해당 객체를 생성하여 request영역의 해당 값을 가지고, setter메서드를 실행하여 반환하는 기능을 구현하였습니다. ex) `public String (UserDto userdto){}` 해당 타입이 자바빈 규약에 따르는지 확인 한 후, 내부적으로 `userDto = new UserDto(); userDto.setUserId(request.getParameter("userId"));` 와 같이 동작합니다.
+
+* 컨트롤러 내부의 메서드의 return type이 String일 경우, `return "redirect:/"`해주면 직접 response 객체를 호출하지않아도, response.sendRedirect 되도록 구현하였습니다.
+
+v2
+
+* @repository 어노테이션을 붙이면 BeanFactory에 해당 인스턴스가 한번만 생성되서 저장이 되고,
+* @Autowired 어노테이션을 필드에 붙이면 해당 필드 값에 BeanFactory에서 해당 인스턴스를 주입해주는 방식으로 구현하였습니다.
+
+v2.1
+
+* BeanFactory 싱글톤 적용, 리플렉션 라이브러리적용, DI부분 확장가능한 구조로 개선
